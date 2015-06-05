@@ -90,7 +90,7 @@ public class KDCPlugin extends CordovaPlugin implements
 
     }
 
-    public boolean ConnectKDC(){
+    public void ConnectKDC(){
 
 
         Thread t = new Thread() {
