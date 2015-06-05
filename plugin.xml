@@ -6,7 +6,7 @@
     <name>KDCPlugin</name>
     <description>KDCReader Plugin</description>
     <license>MIT</license>
-    <keywords>phonegap,calendar</keywords>
+    <keywords>phonegap,cordova</keywords>
  
  
     <js-module src="www/kdcreader.js" name="KDCReader">
