@@ -113,14 +113,7 @@ public class KDCPlugin extends CordovaPlugin implements
      * Stop listening to KDC.
      */
     public void onDestroy() {
-        if (this.receiver != null && this.registered) {
-            try {
-                this.cordova.getActivity().unregisterReceiver(this.receiver);
-                this.registered = false;
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error unregistering network receiver: " + e.getMessage(), e);
-            }
-        }
+       
     }
 
 
