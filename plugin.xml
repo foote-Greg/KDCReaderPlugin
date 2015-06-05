@@ -13,8 +13,6 @@
         <clobbers target="window.kdcreader" />
     </js-module>
     
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
  
     <!-- android -->
     <platform name="android">
@@ -23,6 +21,11 @@
                 <param name="android-package" value="com.meyerre.kdcplugin.KDCPlugin"/>
             </feature>
         </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+    		<uses-permission android:name="android.permission.BLUETOOTH" />
+    		<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+		</config-file>
  
         <source-file src="src/android/KDCPlugin.java" target-dir="src/com/meyerre/kdcplugin" />      
         <source-file src="src/android/libs/kdcreader.jar" target-dir="libs" />
