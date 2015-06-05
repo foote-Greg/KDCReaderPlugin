@@ -70,7 +70,14 @@ public class KDCPlugin extends CordovaPlugin implements
                 ConnectKDC();
                     
                 this.isEnabled = true;
-                callbackContext.success();
+                
+                JSONObject parameter = new JSONObject();
+                parameter.put("ConnectKDCCalled", "CONNECT");
+
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
+                pluginResult.setKeepCallback(true);
+                connectionCallbackContext.sendPluginResult(pluginResult);
+                
                 return true;
 
             }
