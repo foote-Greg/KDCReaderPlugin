@@ -12,6 +12,9 @@
     <js-module src="www/kdcreader.js" name="KDCReader">
         <clobbers target="window.kdcreader" />
     </js-module>
+    
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
  
     <!-- android -->
     <platform name="android">
@@ -22,5 +25,6 @@
         </config-file>
  
         <source-file src="src/android/KDCPlugin.java" target-dir="src/com/meyerre/kdcplugin" />      
+        <source-file src="src/android/libs/kdcreader.jar" target-dir="libs" />
      </platform>          
 </plugin>

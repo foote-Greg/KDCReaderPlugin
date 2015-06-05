@@ -1,7 +1,12 @@
 package com.meyerre.kdcplugin;
  
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.PluginResult;
+import org.apache.cordova.CordovaWebView;
+
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +20,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -42,27 +48,29 @@ public class KDCPlugin extends CordovaPlugin implements
         KDCConnectionListener {
 
     public static final String ACTION_LISTEN = "listenForKDC";
-    public static final String ACTION_DISABLE = "disableKDC";            
-    
+    public static final String ACTION_DISABLE = "disableKDC";
+
     private CallbackContext connectionCallbackContext;
-            
-    private bool isEnabled = false;
-            
-    
+
+    private boolean isEnabled = false;
+    private KDCPlugin me;
+
+
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
- 
-        
+
+        me = this;
+
         try {
-        
-            if (ACTION_LISTEN.equals(action)) { 
+
+            if (ACTION_LISTEN.equals(action)) {
                 this.connectionCallbackContext = callbackContext;
                 if(ConnectKDC()){
                     this.isEnabled = true;
                     callbackContext.success();
                     return true;
                 }
-                
+
             }
             if(ACTION_DISABLE.equals(action){
                 this.connectionCallbackContext = callbackContext;
@@ -72,38 +80,38 @@ public class KDCPlugin extends CordovaPlugin implements
             }
             callbackContext.error("Invalid action");
             return false;
-            
-            } catch(Exception e) {
-                System.err.println("Exception: " + e.getMessage());
-                callbackContext.error(e.getMessage());
-                return false;
-            } 
-    
-        
+
+        } catch(Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            callbackContext.error(e.getMessage());
+            return false;
         }
-               
-    public bool ConnectKDC(){
-     
+
+
+    }
+
+    public boolean ConnectKDC(){
+
 
         Thread t = new Thread() {
 
             @Override
             public void run() {
 
-                KDCReader _kdcReader = new KDCReader(null,this,this,this,this,this,this,false);
+                KDCReader _kdcReader = new KDCReader(null,me,me,me,me,me,me,false);
 
             };
         };
         t.start();
-        
+
     }
-                   
-               
-            
-            
+
+
+
+
     /**
-    * Stop listening to KDC.
-    */
+     * Stop listening to KDC.
+     */
     public void onDestroy() {
         if (this.receiver != null && this.registered) {
             try {
@@ -113,24 +121,32 @@ public class KDCPlugin extends CordovaPlugin implements
                 Log.e(LOG_TAG, "Error unregistering network receiver: " + e.getMessage(), e);
             }
         }
-    }            
-            
-            
-       
-            
-            
+    }
+
+
+
+
+
     @Override
     public void BarcodeDataReceived(KDCData kdcData) {
 
+        try{
+
         if(this.isEnabled){
-        
+
             JSONObject parameter = new JSONObject();
             parameter.put("BarcodeData", kdcData.GetData());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
             pluginResult.setKeepCallback(true);
             connectionCallbackContext.sendPluginResult(pluginResult);
-            
+
+        }
+
+        } catch(Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            connectionCallbackContext.error(e.getMessage());
+            return ;
         }
 
     }
@@ -168,15 +184,23 @@ public class KDCPlugin extends CordovaPlugin implements
                 currentStatus = "Listening for Connection";
                 break;
         }
-        
-                
-        JSONObject parameter = new JSONObject();
-        parameter.put("KDCStatusEnumValue", state);
-        parameter.put("KDCStatus", currentStatus);
 
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
-        pluginResult.setKeepCallback(true);
-        connectionCallbackContext.sendPluginResult(pluginResult);
+
+        try {
+
+            JSONObject parameter = new JSONObject();
+            parameter.put("KDCStatusEnumValue", state);
+            parameter.put("KDCStatus", currentStatus);
+
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
+            pluginResult.setKeepCallback(true);
+            connectionCallbackContext.sendPluginResult(pluginResult);
+
+        } catch(Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            connectionCallbackContext.error(e.getMessage());
+            return ;
+        }
 
     }
 
@@ -187,33 +211,30 @@ public class KDCPlugin extends CordovaPlugin implements
 
     @Override
     public void NFCDataReceived(KDCData kdcData) {
-    
+
+        try{
+
         if(this.isEnabled){
-        
+
             JSONObject parameter = new JSONObject();
             parameter.put("NFCData", kdcData.GetData());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
             pluginResult.setKeepCallback(true);
             connectionCallbackContext.sendPluginResult(pluginResult);
-            
+
         }
-    
+
+        } catch(Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            connectionCallbackContext.error(e.getMessage());
+            return ;
+        }
+
     }
 
-    private void updateTextView(final String displayText){
 
-        this.runOnUiThread(new Runnable() {
 
-            public void run() {
 
-                ((TextView)contentView).setText(displayText);
 
-            }
-        });
-
-    }            
-            
-    
-    
 }
