@@ -72,7 +72,7 @@ public class KDCPlugin extends CordovaPlugin implements
                 }
 
             }
-            if(ACTION_DISABLE.equals(action){
+            if(ACTION_DISABLE.equals(action)){
                 this.connectionCallbackContext = callbackContext;
                 this.isEnabled = false;
                 callbackContext.success();
