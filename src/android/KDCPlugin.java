@@ -64,12 +64,14 @@ public class KDCPlugin extends CordovaPlugin implements
         try {
 
             if (ACTION_LISTEN.equals(action)) {
+
                 this.connectionCallbackContext = callbackContext;
-                if(ConnectKDC()){
-                    this.isEnabled = true;
-                    callbackContext.success();
-                    return true;
-                }
+                
+                ConnectKDC();
+                    
+                this.isEnabled = true;
+                callbackContext.success();
+                return true;
 
             }
             if(ACTION_DISABLE.equals(action)){
