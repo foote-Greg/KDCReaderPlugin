@@ -54,6 +54,8 @@ public class KDCPlugin extends CordovaPlugin implements
 
     private boolean isEnabled = false;
     private KDCPlugin me;
+            
+    private KDCReader _kdcReader;
 
 
     @Override
@@ -102,12 +104,15 @@ public class KDCPlugin extends CordovaPlugin implements
     public void ConnectKDC(){
 
 
+        ArrayList<BluetoothDevice> _btDevices = KDCReader.GetAvailableDeviceList();
+        
+        
         Thread t = new Thread() {
 
             @Override
             public void run() {
 
-                KDCReader _kdcReader = new KDCReader(null,me,me,me,me,me,me,false);
+                _kdcReader = new KDCReader(null,me,me,me,me,me,me,false);
 
             };
         };
