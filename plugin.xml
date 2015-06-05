@@ -20,7 +20,7 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="KDCPlugin">
-                <param name="android-package" value="com.meyerre.kdcplugin"/>
+                <param name="android-package" value="com.meyerre.kdcplugin.KDCPlugin"/>
             </feature>
         </config-file>
  
