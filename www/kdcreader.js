@@ -7,7 +7,7 @@ var kdcreader =  {
             errorCallback, // error callback function
             'KDCPlugin', // mapped to our native Java class called "KDCReaderPlugin"
             'listenForKDC',
-            null
+            [{'nada':'nothing'}]
         );
     },
     disableConnection: function (successCallback, errorCallback) {
@@ -16,7 +16,7 @@ var kdcreader =  {
             errorCallback, // error callback function
             'KDCPlugin', // mapped to our native Java class called "KDCReaderPlugin"
             'disableKDC',
-            null
+            [{'nada':'nothing'}]
         );
     }
 };
