@@ -153,10 +153,10 @@ public class KDCPlugin extends CordovaPlugin implements
     private void disableKDC(){
         
         // Turn the NFC power OFF
-        _kdcreader.EnableNFCPower(0) ;
+        _kdcReader.EnableNFCPower(0) ;
         
        JSONObject parameter = new JSONObject();
-       parameter.put("KDCDisable", kdcData.IsNFCPowerEnabled().toString());
+       parameter.put("KDCDisable", _kdcReader.IsNFCPowerEnabled().toString());
 
        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
        pluginResult.setKeepCallback(true);
@@ -167,10 +167,10 @@ public class KDCPlugin extends CordovaPlugin implements
     private void enableKDC(){
         
         // Turn the NFC power ON
-        _kdcreader.EnableNFCPower(1) ;
+        _kdcReader.EnableNFCPower(1) ;
         
        JSONObject parameter = new JSONObject();
-       parameter.put("KDCEnable", kdcData.IsNFCPowerEnabled().toString());
+       parameter.put("KDCEnable", _kdcReader.IsNFCPowerEnabled().toString());
 
        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
        pluginResult.setKeepCallback(true);
@@ -222,16 +222,16 @@ public class KDCPlugin extends CordovaPlugin implements
         switch(state) {
             case KDCConstants.CONNECTION_STATE_CONNECTED:
             
-                if(!_kdcreader.IsNFCSupported()){
+                if(!_kdcReader.IsNFCSupported()){
                     // Problem !
                     sendPluginBadResult("NFC Not Supported !");
                 }
 
                 // Configure NFC Power
-                _kdcreader.EnableDuplicateCheck(true);
+                _kdcReader.EnableDuplicateCheck(true);
 
                 // Turn the NFC power off initially
-                _kdcreader.EnableNFCPower(false) ;
+                _kdcReader.EnableNFCPower(false) ;
             
                 currentStatus = "Connected";
                 break;
