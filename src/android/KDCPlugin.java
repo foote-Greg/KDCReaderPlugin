@@ -49,6 +49,7 @@ public class KDCPlugin extends CordovaPlugin implements
 
     public static final String ACTION_LISTEN = "listenForKDC";
     public static final String ACTION_DISABLE = "disableKDC";
+    public static final String ACTION_ENABLE = "enableKDC";
 
     private CallbackContext connectionCallbackContext;
 
@@ -72,23 +73,33 @@ public class KDCPlugin extends CordovaPlugin implements
                 ConnectKDC();
                     
                 this.isEnabled = true;
-                
-                JSONObject parameter = new JSONObject();
-                parameter.put("ConnectKDCCalled", "CONNECT");
-
-                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
-                pluginResult.setKeepCallback(true);
-                connectionCallbackContext.sendPluginResult(pluginResult);
+                              
                 
                 return true;
 
             }
+            
             if(ACTION_DISABLE.equals(action)){
+                
                 this.connectionCallbackContext = callbackContext;
                 this.isEnabled = false;
-                callbackContext.success();
+                
+                disableKDC();
+                
                 return true;
             }
+            
+            if(ACTION_ENABLE.equals(action)){
+                
+                this.connectionCallbackContext = callbackContext;
+                this.isEnabled = false;
+               
+                enableKDC();
+                
+                return true;
+            }
+            
+            // Otherwise --
             callbackContext.error("Invalid action");
             return false;
 
@@ -103,6 +114,14 @@ public class KDCPlugin extends CordovaPlugin implements
 
     public void ConnectKDC(){
 
+        
+      JSONObject parameter = new JSONObject();
+      parameter.put("ConnectKDCCalled", "CONNECT");
+
+      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
+      pluginResult.setKeepCallback(true);
+      connectionCallbackContext.sendPluginResult(pluginResult);
+        
 
         ArrayList<BluetoothDevice> _btDevices = KDCReader.GetAvailableDeviceList();
         
@@ -131,7 +150,33 @@ public class KDCPlugin extends CordovaPlugin implements
     }
 
 
+    private void disableKDC(){
+        
+        // Turn the NFC power OFF
+        _kdcreader.EnableNFCPower(0) ;
+        
+       JSONObject parameter = new JSONObject();
+       parameter.put("KDCDisable", kdcData.IsNFCPowerEnabled().toString());
 
+       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
+       pluginResult.setKeepCallback(true);
+       connectionCallbackContext.sendPluginResult(pluginResult);        
+        
+    }
+
+    private void enableKDC(){
+        
+        // Turn the NFC power ON
+        _kdcreader.EnableNFCPower(1) ;
+        
+       JSONObject parameter = new JSONObject();
+       parameter.put("KDCEnable", kdcData.IsNFCPowerEnabled().toString());
+
+       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
+       pluginResult.setKeepCallback(true);
+       connectionCallbackContext.sendPluginResult(pluginResult);        
+        
+    }
 
 
     @Override
@@ -176,8 +221,21 @@ public class KDCPlugin extends CordovaPlugin implements
         // TODO Auto-generated method stub
         switch(state) {
             case KDCConstants.CONNECTION_STATE_CONNECTED:
+            
+                if(!_kdcreader.IsNFCSupported()){
+                    // Problem !
+                    sendPluginBadResult("NFC Not Supported !");
+                }
+
+                // Configure NFC Power
+                _kdcreader.EnableDuplicateCheck(true);
+
+                // Turn the NFC power off initially
+                _kdcreader.EnableNFCPower(false) ;
+            
                 currentStatus = "Connected";
                 break;
+            
             case KDCConstants.CONNECTION_STATE_CONNECTING:
                 currentStatus = "Connecting...";
                 break;
@@ -191,6 +249,8 @@ public class KDCPlugin extends CordovaPlugin implements
                 currentStatus = "Listening for Connection";
                 break;
         }
+        
+        
 
 
         try {
@@ -210,6 +270,20 @@ public class KDCPlugin extends CordovaPlugin implements
         }
 
     }
+            
+    
+    private void sendPluginBadResult(String msg){
+        
+        
+         JSONObject parameter = new JSONObject();
+            parameter.put("KDCErrorMessage", msg);
+
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, parameter);
+            pluginResult.setKeepCallback(true);
+            connectionCallbackContext.sendPluginResult(pluginResult);
+
+    }
+            
 
     @Override
     public void MSRDataReceived(KDCData kdcData) {
