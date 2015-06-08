@@ -114,13 +114,21 @@ public class KDCPlugin extends CordovaPlugin implements
 
     public void ConnectKDC(){
 
+        try{
         
-      JSONObject parameter = new JSONObject();
-      parameter.put("ConnectKDCCalled", "CONNECT");
+          JSONObject parameter = new JSONObject();
+          parameter.put("ConnectKDCCalled", "CONNECT");
 
-      PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
-      pluginResult.setKeepCallback(true);
-      connectionCallbackContext.sendPluginResult(pluginResult);
+          PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
+          pluginResult.setKeepCallback(true);
+          connectionCallbackContext.sendPluginResult(pluginResult);
+
+        } catch(Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            connectionCallbackContext.error(e.getMessage());
+            return ;
+        }
+
         
 
         ArrayList<BluetoothDevice> _btDevices = KDCReader.GetAvailableDeviceList();
@@ -155,12 +163,21 @@ public class KDCPlugin extends CordovaPlugin implements
         // Turn the NFC power OFF
         _kdcReader.EnableNFCPower(false) ;
         
-       JSONObject parameter = new JSONObject();
-       parameter.put("KDCDisable", _kdcReader.IsNFCPowerEnabled());
+        try{
+            
+           JSONObject parameter = new JSONObject();
+           parameter.put("KDCDisable", _kdcReader.IsNFCPowerEnabled());
 
-       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
-       pluginResult.setKeepCallback(true);
-       connectionCallbackContext.sendPluginResult(pluginResult);        
+           PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
+           pluginResult.setKeepCallback(true);
+           connectionCallbackContext.sendPluginResult(pluginResult);        
+            
+        } catch(Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            connectionCallbackContext.error(e.getMessage());
+            return ;
+        }
+
         
     }
 
@@ -169,12 +186,20 @@ public class KDCPlugin extends CordovaPlugin implements
         // Turn the NFC power ON
         _kdcReader.EnableNFCPower(true) ;
         
-       JSONObject parameter = new JSONObject();
-       parameter.put("KDCEnable", _kdcReader.IsNFCPowerEnabled());
+        try{
+           JSONObject parameter = new JSONObject();
+           parameter.put("KDCEnable", _kdcReader.IsNFCPowerEnabled());
 
-       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
-       pluginResult.setKeepCallback(true);
-       connectionCallbackContext.sendPluginResult(pluginResult);        
+           PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
+           pluginResult.setKeepCallback(true);
+           connectionCallbackContext.sendPluginResult(pluginResult);        
+        
+        } catch(Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            connectionCallbackContext.error(e.getMessage());
+            return ;
+        }
+
         
     }
 
@@ -274,13 +299,20 @@ public class KDCPlugin extends CordovaPlugin implements
     
     private void sendPluginBadResult(String msg){
         
-        
-         JSONObject parameter = new JSONObject();
+        try{
+            
+            JSONObject parameter = new JSONObject();
             parameter.put("KDCErrorMessage", msg);
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, parameter);
             pluginResult.setKeepCallback(true);
             connectionCallbackContext.sendPluginResult(pluginResult);
+       } catch(Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            connectionCallbackContext.error(e.getMessage());
+            return ;
+        }
+
 
     }
             
