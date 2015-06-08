@@ -153,10 +153,10 @@ public class KDCPlugin extends CordovaPlugin implements
     private void disableKDC(){
         
         // Turn the NFC power OFF
-        _kdcReader.EnableNFCPower(0) ;
+        _kdcReader.EnableNFCPower(false) ;
         
        JSONObject parameter = new JSONObject();
-       parameter.put("KDCDisable", _kdcReader.IsNFCPowerEnabled().toString());
+       parameter.put("KDCDisable", _kdcReader.IsNFCPowerEnabled());
 
        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
        pluginResult.setKeepCallback(true);
@@ -167,10 +167,10 @@ public class KDCPlugin extends CordovaPlugin implements
     private void enableKDC(){
         
         // Turn the NFC power ON
-        _kdcReader.EnableNFCPower(1) ;
+        _kdcReader.EnableNFCPower(true) ;
         
        JSONObject parameter = new JSONObject();
-       parameter.put("KDCEnable", _kdcReader.IsNFCPowerEnabled().toString());
+       parameter.put("KDCEnable", _kdcReader.IsNFCPowerEnabled());
 
        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, parameter);
        pluginResult.setKeepCallback(true);
